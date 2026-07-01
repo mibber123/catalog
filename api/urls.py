@@ -2,7 +2,7 @@ from django.urls import re_path
 from django.urls import path
 from . import views
 
-app_name = 'api'
+appname = 'api'
 
 urlpatterns = [
     #path('books/$', views.book_view, name='book_view'),
