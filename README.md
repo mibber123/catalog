@@ -177,3 +177,25 @@ Deployment
 Ben
 
 
+## eventual
+
+Portfolio
+
+├── Cloud Native Demo
+│   ├── Docker
+│   ├── Kubernetes
+│   ├── GitHub Actions
+│   └── Helm
+│
+├── Data Engineering
+│   ├── ETL Pipelines
+│   ├── Airflow (later)
+│   ├── Spark (later)
+│   ├── SQL
+│   └── Python
+│
+├── Tableau Dashboards
+│
+├── REST APIs
+│
+└── Python Projects
