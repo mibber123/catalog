@@ -1,4 +1,5 @@
 name: "Install python and dependencies"
+description: "Sets up Python 3.10 environment and installs project dependencies from requirements.txt"
 runs:
   using: "composite"
   steps:
