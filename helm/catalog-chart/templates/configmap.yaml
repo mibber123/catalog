@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "books-catalog-chart.fullname" . }}
+  name: {{ include "books-catalog-chart.fullname" . }}-envs
   labels:
     {{- include "books-catalog-chart.labels" . | nindent 4 }}
 data:
