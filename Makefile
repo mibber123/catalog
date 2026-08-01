@@ -129,10 +129,6 @@ check: helm-lint test
 	@echo ""
 	@echo "All checks passed."
 
-
-
-
-
 tree:
 	tree -a -I '.git|.venv|__pycache__|.pytest_cache'
 
