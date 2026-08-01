@@ -2,223 +2,247 @@
 
 ![Django CI](https://github.com/mibber123/catalog/actions/workflows/django.yml/badge.svg)
 
-A RESTful Book Catalog API built with Django REST Framework as part of a cloud-native software development module.
+A cloud-native REST API built with **Django REST Framework**, demonstrating a modern GitOps deployment pipeline using Docker, Kubernetes, Helm, ArgoCD and GitHub Actions.
 
-## Features
+---
 
-- Django REST Framework API
-- PostgreSQL support
+# Features
+
+- RESTful API built with Django REST Framework
+- PostgreSQL database
 - SQLite support for local development
-- Docker & Docker Compose
-- Kubernetes (k3d)
-- GitHub Actions Continuous Integration
+- Docker containerisation
+- Helm chart deployment
+- ArgoCD GitOps continuous deployment
+- GitHub Actions CI/CD pipeline
+- Semantic Release automated versioning
+- GitHub Container Registry (GHCR)
 
-## Tech Stack
+---
 
-- Python 3.10
-- Django 5.2
-- Django REST Framework
-- PostgreSQL
-- Docker
-- Docker Compose
-- Kubernetes (k3d)
-- GitHub Actions
+# Technology Stack
 
-## Getting Started
+| Technology | Purpose |
+|------------|---------|
+| Python 3.10 | Application |
+| Django 5 | Web Framework |
+| Django REST Framework | REST API |
+| PostgreSQL | Production Database |
+| SQLite | Local Development |
+| Docker | Containerisation |
+| Kubernetes (k3d) | Container Orchestration |
+| Helm | Kubernetes Package Management |
+| ArgoCD | GitOps Deployment |
+| GitHub Actions | Continuous Integration / Deployment |
+| GHCR | Container Registry |
 
-### Clone the repository
+---
+
+# Project Structure
+
+```
+catalog/
+│
+├── api/                     # Django REST API
+├── bookcatalog/             # Django project configuration
+│
+├── helm/
+│   ├── argo/                # ArgoCD configuration
+│   ├── catalog-chart/       # Helm chart
+│   └── postgres/            # PostgreSQL values
+│
+├── envs/
+│   └── prod/
+│       └── values.yaml      # Production deployment values
+│
+├── .github/
+│   ├── actions/
+│   └── workflows/
+│
+├── Dockerfile
+├── docker-compose.yml
+├── entrypoint.sh
+├── requirements.txt
+├── manage.py
+└── README.md
+```
+
+---
+
+# Local Development
+
+Clone the repository
 
 ```bash
 git clone git@github.com:mibber123/catalog.git
 cd catalog
 ```
 
-### Create a virtual environment
+Create a virtual environment
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### Install dependencies
+Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Apply migrations
+Apply database migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### Run the development server
+Run the development server
 
 ```bash
 python manage.py runserver
 ```
 
-The API will be available at:
+Application URL
 
 ```
 http://127.0.0.1:8000/api/
 ```
 
-## Running with Docker
+---
 
-Build the image:
+# Docker
+
+Build
 
 ```bash
 docker compose build
 ```
 
-Start the application:
+Run
 
 ```bash
 docker compose up
 ```
 
-## Running Tests
+---
+
+# Testing
+
+Run the Django test suite
 
 ```bash
 python manage.py test
 ```
 
-## Continuous Integration
+or
 
-GitHub Actions automatically:
+```bash
+pytest
+```
 
-- Installs dependencies
-- Runs Django tests
-- Validates every push and pull request to `main`
+---
 
+# CI/CD Pipeline
 
-## API Endpoints
+GitHub Actions automatically performs the following:
+
+- Installs project dependencies
+- Runs automated tests
+- Checks database migrations
+- Creates Semantic Releases
+- Builds Docker images
+- Pushes images to GitHub Container Registry
+- Updates the production Helm values
+- Triggers automatic deployment through ArgoCD
+
+---
+
+# GitOps Deployment Flow
+
+```
+Developer
+    │
+    ▼
+Git Push
+    │
+    ▼
+GitHub Actions
+    │
+    ├── Tests
+    ├── Migration Checks
+    ├── Semantic Release
+    ├── Build Docker Image
+    ├── Push Image to GHCR
+    └── Update envs/prod/values.yaml
+                │
+                ▼
+             GitHub
+                │
+                ▼
+             ArgoCD
+                │
+                ▼
+          Helm Chart Sync
+                │
+                ▼
+      PreSync Migration Job
+                │
+                ▼
+      Kubernetes Deployment
+                │
+                ▼
+          Running Application
+```
+
+---
+
+# Kubernetes Architecture
+
+```
+                Internet
+                    │
+                    ▼
+               Ingress
+                    │
+                    ▼
+           ClusterIP Service
+                    │
+                    ▼
+              Deployment
+                    │
+        ┌───────────┼───────────┐
+        ▼           ▼           ▼
+      Pod 1       Pod 2       Pod 3
+```
+
+---
+
+# API Endpoints
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
-| GET | /api/books/ | List all books |
-| GET | /api/books/{id}/ | Get a single book |
-| POST | /api/books/ | Create a book |
-| PUT | /api/books/{id}/ | Update a book |
-| DELETE | /api/books/{id}/ | Delete a book |
+| GET | `/api/books/` | List books |
+| GET | `/api/books/{id}/` | Retrieve a book |
+| POST | `/api/books/` | Create a book |
+| PUT | `/api/books/{id}/` | Update a book |
+| DELETE | `/api/books/{id}/` | Delete a book |
 
+---
 
-## Project Structure
+# Future Improvements
 
-catalog/
-├── api/
-├── bookcatalog/
-├── .github/
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-└── manage.py
+- Health monitoring
+- Metrics and observability
+- Horizontal Pod Autoscaling
+- Resource requests and limits
+- Multiple deployment environments
+- TLS and HTTPS
+- Production secrets management
+- Helm chart reuse across projects
 
-catalog/
-│
-├── k8s/
-│   ├── nginx-pod.yaml
-│   ├── nginx-deployment.yaml
-│   ├── service.yaml
-│   └── ingress.yaml
-│
-├── Dockerfile
-├── docker-compose.yml
-├── manage.py
-└── ...
+---
 
+# Author
 
-## Kubernetes Diagram
-
-Internet
-    │
-    ▼
-Ingress
-    │
-    ▼
-Service (ClusterIP)
-    │
-    ▼
-Deployment
-    │
-    ▼
-Pod 1
-Pod 2
-Pod 3
-
-
-Browser
-     │
-localhost:8081
-     │
-     ▼
-Ingress
-     │
-     ▼
-ClusterIP Service
-     │
-     ▼
-Deployment
-     │
-     ▼
-+---------+
-| Pod #1  |
-+---------+
-+---------+
-| Pod #2  |
-+---------+
-+---------+
-| Pod #3  |
-+---------+
-
-
-## Author
 Ben
-
-
-## eventual
-
-Portfolio
-
-├── Cloud Native Demo
-│   ├── Docker
-│   ├── Kubernetes
-│   ├── GitHub Actions
-│   └── Helm
-│
-├── Data Engineering
-│   ├── ETL Pipelines
-│   ├── Airflow (later)
-│   ├── Spark (later)
-│   ├── SQL
-│   └── Python
-│
-├── Tableau Dashboards
-│
-├── REST APIs
-│
-└── Python Projects
-
-
-
-
-
-catalog/
-│
-├── .vscode/
-│   ├── settings.json
-│   ├── tasks.json
-│   ├── launch.json
-│   ├── extensions.json
-│   └── README.md
-│
-├── .github/
-│
-├── docker-compose.yml
-│
-├── k8s/
-│
-├── docs/
-│
-└── catalog.code-workspace

@@ -1,0 +1,20 @@
+apiVersion: v2
+name: app
+description: A reusable Helm chart for deploying Django applications
+type: application
+version: 0.1.0
+appVersion: "latest"
+
+home: https://github.com/mibber123/catalog
+icon: https://github.com/mibber123.png
+
+keywords:
+  - django
+  - kubernetes
+  - helm
+  - api
+  - web
+
+maintainers:
+  - name: Ben
+    url: https://github.com/mibber123

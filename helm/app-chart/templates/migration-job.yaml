@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ .Release.Name }}-migrate"
+  name: {{ include "app.migrationJobName" . }}
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "0"
@@ -9,21 +9,18 @@ metadata:
 spec:
   template:
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{ include "app.imagePullSecrets" . | nindent 6 }}
       restartPolicy: Never
       containers:
         - name: migrate
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ include "app.image" . }}"
           command: ["python", "manage.py", "migrate"]
           envFrom:
             - configMapRef:
-                name: {{ include "books-catalog-chart.fullname" . }}-envs
+                name: {{ include "app.configMapName" . }}
           env:
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.loadSecretsFrom }}
+                  name: {{ include "app.databaseSecretName" . }}
                   key: password

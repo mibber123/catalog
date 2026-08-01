@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "books-catalog-chart.name" -}}
+{{- define "app.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "books-catalog-chart.fullname" -}}
+{{- define "app.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "books-catalog-chart.chart" -}}
+{{- define "app.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "books-catalog-chart.labels" -}}
-helm.sh/chart: {{ include "books-catalog-chart.chart" . }}
-{{ include "books-catalog-chart.selectorLabels" . }}
+{{- define "app.labels" -}}
+helm.sh/chart: {{ include "app.chart" . }}
+{{ include "app.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,7 +45,45 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "books-catalog-chart.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "books-catalog-chart.name" . }}
+{{- define "app.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "app.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Return the ConfigMap name.
+*/}}
+{{- define "app.configMapName" -}}
+{{ include "app.fullname" . }}-envs
+{{- end }}
+
+{{/*
+Return the full container image.
+*/}}
+{{- define "app.image" -}}
+{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+{{- end }}
+
+{{/*
+Return the database secret name.
+*/}}
+{{- define "app.databaseSecretName" -}}
+{{ .Values.database.secretName }}
+{{- end }}
+
+{{/*
+Return the migration job name.
+*/}}
+{{- define "app.migrationJobName" -}}
+{{ printf "%s-migrate" .Release.Name }}
+{{- end }}
+
+{{/*
+Render image pull secrets.
+*/}}
+{{- define "app.imagePullSecrets" -}}
+{{- with .Values.imagePullSecrets }}
+imagePullSecrets:
+{{- toYaml . | nindent 2 }}
+{{- end }}
 {{- end }}

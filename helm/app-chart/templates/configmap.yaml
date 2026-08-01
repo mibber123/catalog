@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "app.configMapName" . }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-1"
+
+data:
+  DATABASE_HOST: {{ .Values.database.host | quote }}
+  DATABASE_NAME: {{ .Values.database.name | quote }}
+  DATABASE_USER: {{ .Values.database.user | quote }}
+
+{{- range $key, $value := .Values.environment }}
+  {{ $key }}: {{ $value | quote }}
+{{- end }}
