@@ -109,9 +109,9 @@ check: helm-lint test
 
 verify:
 	@printf "$(BLUE)Running repository verification...$(RESET)\n"
-	@$(MAKE) helm-lint
-	@$(MAKE) helm-render
-	@$(MAKE) test
+	@$(MAKE) --no-print-directory helm-lint
+	@$(MAKE) --no-print-directory helm-render
+	@$(MAKE) --no-print-directory test
 	@printf "$(GREEN)Repository verification complete.$(RESET)\n"
 
 tree:
