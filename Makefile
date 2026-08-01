@@ -11,6 +11,41 @@ BLUE := \033[0;34m
 RESET := \033[0m
 
 # =============================================================================
+# Workflow
+# =============================================================================
+
+env:
+	cd ~/projects/catalog \source .venv/bin/activate
+
+verify:
+	@printf "$(BLUE)Running repository verification...$(RESET)\n"
+	@$(MAKE) --no-print-directory helm-lint
+	@$(MAKE) --no-print-directory helm-render
+	@$(MAKE) --no-print-directory test
+	@printf "$(GREEN)Repository verification complete.$(RESET)\n"
+
+start:
+	k3d cluster start mycluster
+
+status:
+	kubectl get pods
+	kubectl get svc
+	kubectl get ingress
+
+cred:
+	kubectl -n argocd get secret argocd-initial-admin-secret \-o jsonpath="{.data.password}" | base64 -d
+
+argocd:
+	kubectl -n argocd port-forward svc/argocd-server 8082:443
+
+argo:
+	argocd:
+	@echo "ArgoCD UI: http://localhost:8081/argocd"
+
+stop:
+	k3d cluster stop mycluster
+
+# =============================================================================
 # Django
 # =============================================================================
 
@@ -31,19 +66,6 @@ shell:
 
 createsuperuser:
 	python manage.py createsuperuser
-
-# =============================================================================
-# Docker
-# =============================================================================
-
-docker-build:
-	docker compose build
-
-docker-up:
-	docker compose up
-
-docker-down:
-	docker compose down
 
 # =============================================================================
 # Helm
@@ -91,7 +113,7 @@ jobs:
 # =============================================================================
 
 argocd:
-	xdg-open http://localhost:8081/argocd
+	kubectl port-forward svc/argocd-server -n argocd 8081:443
 
 sync:
 	kubectl rollout restart deployment/$(PROJECT)
@@ -107,12 +129,9 @@ check: helm-lint test
 	@echo ""
 	@echo "All checks passed."
 
-verify:
-	@printf "$(BLUE)Running repository verification...$(RESET)\n"
-	@$(MAKE) --no-print-directory helm-lint
-	@$(MAKE) --no-print-directory helm-render
-	@$(MAKE) --no-print-directory test
-	@printf "$(GREEN)Repository verification complete.$(RESET)\n"
+
+
+
 
 tree:
 	tree -a -I '.git|.venv|__pycache__|.pytest_cache'
