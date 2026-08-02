@@ -5,3 +5,5 @@ class Book(models.Model):
     description = models.TextField(blank=True)
     author = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    isbn = models.CharField(max_length=20, unique=True)
+    published_date = models.DateField()

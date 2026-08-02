@@ -52,10 +52,10 @@ stop:
 run:
 	python manage.py runserver
 
-migrate:
+runmig:
 	python manage.py migrate
 
-makemigrations:
+makemig:
 	python manage.py makemigrations
 
 test:
@@ -112,7 +112,7 @@ jobs:
 # ArgoCD
 # =============================================================================
 
-argocd:
+xargocd:
 	kubectl port-forward svc/argocd-server -n argocd 8081:443
 
 sync:
